@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanVize | AI-Powered Postgres Query Optimization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="container">
+        <div class="logo">
+            <span class="logo-text">Plan<span class="accent">Vize</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it Works</a>
+            <a href="#waitlist" class="btn btn-outline">Join Waitlist</a>
+        </div>
+    </nav>
+
+    <header class="hero container">
+        <div class="hero-content">
+            <h1>Stop guessing why your Postgres queries are slow.</h1>
+            <p class="subtitle">PlanVize correlates your <code>EXPLAIN</code> plans with actual <code>pg_stats</code> to identify the "hidden" reasons Postgres is skipping your indexes.</p>
+            
+            <form id="waitlist-form" class="hero-form">
+                <input type="email" id="email" placeholder="Enter your work email" required>
+                <button type="submit" class="btn btn-primary">Get Beta Access</button>
+            </form>
+            <p id="form-message" class="form-message"></p>
+        </div>
+        <div class="hero-image">
+            <img src="images/a-sophisticated-dark-themed-dashboard-in.png" alt="PlanVize Dashboard Interface">
+        </div>
+    </header>
+
+    <section id="features" class="features container">
+        <div class="section-tag">The Clarity Layer</div>
+        <h2>Bridge the "Stats Gap"</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon">📊</div>
+                <h3>Correlate Plan + Stats</h3>
+                <p>Most tools just show the plan. We cross-reference it with histograms and MCVs from <code>pg_stats</code> to see if your statistics are stale.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🤖</div>
+                <h3>Conversational AI</h3>
+                <p>Turn 500-line JSON plans into 2-sentence explanations. "Your stats think this column is 40% NULL, but it's actually 99%."</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔍</div>
+                <h3>Index Auditing</h3>
+                <p>Understand exactly why Postgres chose a Seq Scan over your index—whether it's cost estimation, cardinality, or a type mismatch.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="split-layout">
+                <div class="text-block">
+                    <h2>Built for Backend Engineers.</h2>
+                    <p>Stop staring at walls of text in pgAdmin. PlanVize gives you the "Why" behind the "What".</p>
+                    <ul class="check-list">
+                        <li>Integrates with Supabase, AWS RDS, and Neon.</li>
+                        <li>Identifies stale statistics and vacuum needs.</li>
+                        <li>Explains index suppression from implicit casts.</li>
+                    </ul>
+                </div>
+                <div class="code-block">
+                    <pre><code><span class="comment">-- PlanVize Insight:</span>
+<span class="keyword">ALERT:</span> Sequential Scan detected on "orders".
+<span class="keyword">REASON:</span> Table stats estimate 10k rows, but
+actual row count is 1.2M.
+<span class="keyword">FIX:</span> Run ANALYZE orders;</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="waitlist" class="container">
+        <div class="footer-cta">
+            <h2>Ready to optimize?</h2>
+            <p>Join the private beta for the next generation of Postgres tuning.</p>
+            <form id="waitlist-form-footer" class="hero-form">
+                <input type="email" id="email-footer" placeholder="engineer@company.com" required>
+                <button type="submit" class="btn btn-primary">Join the Waitlist</button>
+            </form>
+            <p id="form-message-footer" class="form-message"></p>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PlanVize. Built for the Postgres Community.</p>
+        </div>
+    </footer>
+
+    <script>
+        async function handleForm(formId, inputId, messageId) {
+            const form = document.getElementById(formId);
+            const message = document.getElementById(messageId);
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById(inputId).value;
+                
+                message.textContent = 'Joining...';
+                message.className = 'form-message';
+
+                try {
+                    const response = await fetch('https://stg-app.baget.ai/api/public/databases/69e25dd0-3fdf-4335-979b-5bab20655676/rows', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: {
+                                email: email,
+                                role: 'Waitlist User',
+                                company_size: 'TBD'
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        message.textContent = 'Success! We\'ll be in touch soon.';
+                        message.classList.add('success');
+                        form.reset();
+                    } else {
+                        throw new Error();
+                    }
+                } catch (err) {
+                    message.textContent = 'Something went wrong. Please try again.';
+                    message.classList.add('error');
+                }
+            });
+        }
+
+        handleForm('waitlist-form', 'email', 'form-message');
+        handleForm('waitlist-form-footer', 'email-footer', 'form-message-footer');
+    </script>
+</body>
+</html>
